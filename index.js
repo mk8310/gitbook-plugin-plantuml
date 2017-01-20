@@ -1,84 +1,61 @@
+var fs = require('fs');
+var re = /^```uml((.*\n)+?)?```$/img;
+var crypto = require('crypto');
+var path = require('path');
+var https = require('https');
+var qs = require('querystring');
+
+require('shelljs/global');
+
 module.exports = {
-    // Extend website resources and html
-    website: {
-        assets: "./book",
-        js: [
-            "test.js"
-        ],
-        css: [
-            "test.css"
-        ],
-        html: {
-            "html:start": function() {
-                return "<!-- Start book "+this.options.title+" -->"
-            },
-            "html:end": function() {
-                return "<!-- End of book "+this.options.title+" -->"
-            },
+	hooks: {
+		"init": function () {
+			var output = this.output;
+			var umlPath = output.resolve('assets/images/uml');
 
-            "head:start": "<!-- head:start -->",
-            "head:end": "<!-- head:end -->",
+			mkdir('-p', umlPath);
+		},
+		"page:before": function (page) {
+			var output = this.output;
+			var content = page.content;
 
-            "body:start": "<!-- body:start -->",
-            "body:end": "<!-- body:end -->"
-        }
-    },
+			var umls = [];
+			while ((match = re.exec(content))) {
+				var rawBlock = match[0];
+				var umlBlock = match[1];
+				var md5 = crypto.createHash('md5').update(umlBlock).digest('hex');
+				var svgPath = path.join('assets', 'images', 'uml', md5 + '.svg');
+				umls.push({
+					rawBlock: match[0],
+					umlBlock: match[1],
+					svgPath: svgPath
+				});
+			}
 
-    // Extend ebook resources and html
-    website: {
-        assets: "./book",
-        js: [
-            "test.js"
-        ],
-        css: [
-            "test.css"
-        ],
-        html: {
-            "html:start": function() {
-                return "<!-- Start book "+this.options.title+" -->"
-            },
-            "html:end": function() {
-                return "<!-- End of book "+this.options.title+" -->"
-            },
+			Promise.all([umls.map(uml => {
+				var svgTag = '![](/' + uml.svgPath + ')';
+				page.content = content = content.replace(uml.rawBlock, svgTag);
 
-            "head:start": "<!-- head:start -->",
-            "head:end": "<!-- head:end -->",
+				return output.hasFile(uml.svgPath).then(exists => {
+					if (!exists) {
+						return new Promise((resolve, reject) => {
+							https.request({
+								host: 'plantuml-service.herokuapp.com',
+								path: '/svg/' + qs.escape(uml.umlBlock)
+							}, (res) => {
+								var ws = fs.createWriteStream(output.resolve(uml.svgPath));
+								res.pipe(ws);
+								res.on('end', resolve);
+							}).end();
+						});
+					}
+				})
+			})]);
 
-            "body:start": "<!-- body:start -->",
-            "body:end": "<!-- body:end -->"
-        }
-    },
+			return page;
+		},
 
-    // Extend templating blocks
-    blocks: {
-        // Author will be able to write "{% myTag %}World{% endMyTag %}"
-        myTag: {
-            process: function(blk) {
-                return "Hello "+blk.body;
-            }
-        }
-    },
-
-    // Extend templating filters
-    filters: {
-        // Author will be able to write "{{ 'test'|myFilter }}"
-        myFilter: function(s) {
-            return "Hello "+s;
-        }
-    },
-
-    // Hook process during build
-    hooks: {
-        // For all the hooks, this represent the current generator
-
-        // This is called before the book is generated
-        "init": function() {
-            console.log("init!");
-        },
-
-        // This is called after the book generation
-        "finish": function() {
-            console.log("finish!");
-        }
-    }
+		"page": function (page) { return page; },
+		"page:after": function (page) { return page; }
+	}
 };

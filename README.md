@@ -1,40 +1,12 @@
-GitBook Sample Plugin
+**GitBook PlantUml Plugin**
 ==============
+* inspire by [romanlytkin/gitbook-plantuml](https://github.com/romanlytkin/gitbook-plantuml)
+* use [bitjourney/plantuml-service](https://github.com/bitjourney/plantuml-service)
+to support plantuml, so you do not need java run time on your host machine.
 
-This is a model for GitBook plugins.
+**How to use it:**
+--------------
+```$ npm install gitbook-plugin-plantuml-cloud```
 
-## How GitBook plugin works?
-
-A plugin for GitBook is a node package that can be published on [NPM](http://www.npmjs.org). It has to follow the name convention: `gitbook-plugin-*name*`.
-
-### package.json
-
-#### name
-
-The package name should begin with ```gitbook-plugin-```.
-
-Examples: `gitbook-plugin-mixpanel`, `gitbook-plugin-googleanalytics`.
-
-#### engine
-
-The package.json should contain a `engine` field using [the standard norm](https://www.npmjs.org/doc/json.html#engines).
-
-```
-"engines": {
-    "gitbook": "*"
-}
-```
-
-For example if you want your plugin to supports only GitBook version supperior to 0.3.1:
-
-```
-"engines": {
-    "gitbook": ">=0.3.1"
-}
-```
-
-### entry point
-
-The plugin entry point should return an object with some metadata.
-
-
+***Additional requirements:***
+NO
