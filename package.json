@@ -6,15 +6,12 @@
   "engines": {
     "gitbook": "*"
   },
-  "homepage": "https://github.com/GitbookIO/plugin",
+  "homepage": "https://github.com/dy93/gitbook-plugin-plantuml-cloud",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GitbookIO/plugin.git"
+    "url": "git+https://github.com/dy93/gitbook-plugin-plantuml-cloud.git"
   },
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/GitbookIO/plugin/issues"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
