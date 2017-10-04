@@ -14,7 +14,7 @@ var options = {
 	"host": "plantuml-service.herokuapp.com",
 	"protocol": "https",
 	"path": "/svg/",
-	"blockRegex": "^```uml((.*\n)+?)?```$"
+	"blockRegex": "^```uml((.*[\r\n])+?)?```$"
 }
 
 require('shelljs/global');
