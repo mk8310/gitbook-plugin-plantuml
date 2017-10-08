@@ -21,11 +21,11 @@ require('shelljs/global');
 
 
 function plantumlServerEscape(block) {
-
-  //UTF8
-  var compressedUml = unescape(encodeURIComponent(block));
-  compressedUml = plantUml.encode64(plantUml.zip_deflate(compressedUml, 9));
-  return compressedUml;
+	//UTF8
+	var compressedUml = unescape(encodeURIComponent(block));
+	compressedUml = zlib.deflateRawSync(compressedUml, { level: 9 }).toString('utf8');
+	compressedUml = plantUml.encode64(compressedUml);
+	return compressedUml;
 }
 
 module.exports = {
@@ -33,22 +33,22 @@ module.exports = {
 		"init": function () {
 			var output = this.output;
 			var config = this.config.values.pluginsConfig["plantuml-cloud"];
-			if(config.umlPath != undefined) {
+			if (config.umlPath != undefined) {
 				options.umlPath = config.umlPath;
 			}
-			if(config.type != undefined) {
+			if (config.type != undefined) {
 				options.type = config.type;
 			}
-			if(config.host != undefined) {
+			if (config.host != undefined) {
 				options.host = config.host;
 			}
-			if(config.protocol != undefined) {
+			if (config.protocol != undefined) {
 				options.protocol = config.protocol;
 			}
-			if(config.path != undefined) {
+			if (config.path != undefined) {
 				options.path = config.path;
 			}
-			if(config.blockRegex != undefined) {
+			if (config.blockRegex != undefined) {
 				options.blockRegex = config.blockRegex;
 			}
 			var umlPath = output.resolve(options.umlPath);
@@ -80,15 +80,15 @@ module.exports = {
 				return output.hasFile(uml.svgPath).then(exists => {
 					if (!exists) {
 						return new Promise((resolve, reject) => {
-							
+
 							var client = http;
-							if(options.protocol == "https"){
+							if (options.protocol == "https") {
 								client = https;
-							} 
-							
-							var path = options.path + qs.escape(uml.umlBlock); 
-							if(options.type == "plantuml-server") {
-								path = options.path + plantumlServerEscape(uml.umlBlock); 
+							}
+
+							var path = options.path + qs.escape(uml.umlBlock);
+							if (options.type == "plantuml-server") {
+								path = options.path + plantumlServerEscape(uml.umlBlock);
 							}
 
 							client.request({
