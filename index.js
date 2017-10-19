@@ -22,10 +22,9 @@ require('shelljs/global');
 
 function plantumlServerEscape(block) {
 	//UTF8
-	var compressedUml = unescape(encodeURIComponent(block));
-	compressedUml = zlib.deflateRawSync(compressedUml, { level: 9 }).toString('utf8');
-	compressedUml = plantUml.encode64(compressedUml);
-	return compressedUml;
+	var toDeflate = unescape(encodeURIComponent(block));
+	var deflated = zlib.deflateRawSync(toDeflate, { level: 9 });
+	return plantUml.encode64(deflated);
 }
 
 module.exports = {
