@@ -62,13 +62,13 @@ module.exports = {
     'page:before': async function(page) {
       let content = page.content;
       const output = this.output;
-      
+
       const umls = [];
       const re = new RegExp(options.blockRegex, 'img');
 
       while (match = re.exec(content)) {
         const rawBlock = match[0];
-        const umlBlock = match[1];
+        const umlBlock = match[1].trim();
         const md5 = crypto.createHash('md5').update(umlBlock).digest('hex');
         const svgPath = path.join(options.umlPath, `${md5}.svg`);
         umls.push({rawBlock, umlBlock,svgPath});
