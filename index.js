@@ -3,7 +3,6 @@ const crypto = require('crypto');
 const path = require('path');
 const https = require('https');
 const http = require('http');
-const qs = require('querystring');
 const zlib = require('zlib');
 
 const plantUml = require('./plantuml_encode');
@@ -27,16 +26,21 @@ const createUML = async (content, uml, output) => {
       return new Promise(resolve => {
         const client = options.protocol === 'https' ? https : http;
 
-        let path = options.path + qs.escape(uml.umlBlock);
+        let path = options.path;
+        let method = 'GET';
         if (options.type === 'plantuml-server') {
-          path = options.path + plantumlServerEscape(uml.umlBlock);
+          path = options.path + '/' + plantumlServerEscape(uml.umlBlock);
+        } else {
+          method = 'POST';
         }
 
-        client.request({host: options.host, path: path}, res => {
+        const req = client.request({method: method, host: options.host, port: options.port, path: path}, res => {
           const ws = fs.createWriteStream(output.resolve(uml.svgPath));
           res.pipe(ws);
           res.on('end', resolve);
-        }).end();
+        })
+        if (method === 'POST') req.write(uml.umlBlock);
+        req.end();
       });
     }
   });
@@ -52,8 +56,9 @@ module.exports = {
         umlPath:  config.umlPath || 'assets/images/uml',
         type: config.type || 'plantuml-service',
         host: config.host || 'plantuml-service.herokuapp.com',
+        port: config.port || 80,
         protocol: config.protocol ||'https',
-        path: config.path || '/svg/',
+        path: config.path || '/svg',
         blockRegex: config.blockRegex || '^```uml((.*[\r\n])+?)?```$'
       };
       const umlPath = output.resolve(options.umlPath);
