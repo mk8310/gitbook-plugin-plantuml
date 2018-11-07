@@ -32,8 +32,9 @@ The plugin now supports two APIs for generating PlantUML diagrams:
 | umlPath | Path to a directory where the generated images for the diagrams will be cached. | "assets/images/uml" |
 | type | Determines the type of the server side API | "plantuml-service" |
 | host | Host for the diagramming service | "plantuml-service.herokuapp.com" |
+| port | Port number for the diagramming service | 80 |
 | protocol | https or http | "https" |
-| path | URL Fragment which will be appended to the host part | "/svg/" |
+| path | URL Fragment which will be appended to the host part | "/svg" |
 | blockRegex | Regular expression to select the diagramming text blocks. | ^```uml((.*\n)+?)?```$ |
 
 * If want to use the PlantUML Server API the following changes need to be made to the plugin configuration in your book.json:
