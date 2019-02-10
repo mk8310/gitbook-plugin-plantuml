@@ -19,7 +19,7 @@ const plantumlServerEscape = (block) => {
 };
 
 const createUML = async (content, uml, output) => {
-  const svgTag = `![](/${uml.svgPath});`
+  const svgTag = `![](/${uml.svgPath})`;
   content = content.replace(uml.rawBlock, svgTag);
   await output.hasFile(uml.svgPath).then(exists => {
     if (!exists) {
