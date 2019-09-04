@@ -13,8 +13,8 @@ let options;
 
 const plantumlServerEscape = (block) => {
   //UTF8
-  const toDeflate = unescape(encodeURIComponent(block));
-  const deflated = zlib.deflateRawSync(toDeflate, {level: 9});
+  // const toDeflate = unescape(encodeURIComponent(block));
+  const deflated = zlib.deflateRawSync(block, {level: 9});
   return plantUml.encode64(deflated);
 };
 
