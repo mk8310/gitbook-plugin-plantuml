@@ -19,9 +19,9 @@ const plantumlServerEscape = (block) => {
 };
 
 const createUML = async (content, uml, output) => {
-    const svgTag = `![](/${uml.svgPath})`;
+    const svgTag = `![](/${uml.imagePath})`;
     content = content.replace(uml.rawBlock, svgTag);
-    await output.hasFile(uml.svgPath).then(exists => {
+    await output.hasFile(uml.imagePath).then(exists => {
         if (!exists) {
             return new Promise(resolve => {
                 const client = options.protocol === 'https' ? https : http;
@@ -40,7 +40,7 @@ const createUML = async (content, uml, output) => {
                     port: options.port,
                     path: path
                 }, res => {
-                    const ws = fs.createWriteStream(output.resolve(uml.svgPath));
+                    const ws = fs.createWriteStream(output.resolve(uml.imagePath));
                     res.pipe(ws);
                     res.on('end', resolve);
                 });
@@ -80,8 +80,8 @@ module.exports = {
                 const rawBlock = match[0];
                 const umlBlock = match[1].trim();
                 const md5 = crypto.createHash('md5').update(umlBlock).digest('hex');
-                const svgPath = path.join(options.umlPath, `${md5}.` + options.image_type);
-                umls.push({rawBlock, umlBlock, svgPath});
+                const imagePath = path.join(options.umlPath, `${md5}.` + options.image_type);
+                umls.push({rawBlock, umlBlock, imagePath: imagePath});
             }
 
             for (const uml of umls) {
