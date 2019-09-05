@@ -56,7 +56,7 @@ module.exports = {
     hooks: {
         'init': function () {
             const output = this.output;
-            const config = this.config.values.pluginsConfig['plantuml'];
+            const config = this.config.values.pluginsConfig['gitbook-plugin-plantuml'];
             options = {
                 umlPath: config.umlPath || 'assets/images/uml',
                 type: config.type || 'plantuml-service',

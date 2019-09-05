@@ -1,5 +1,5 @@
 {
-  "name": "plantuml",
+  "name": "gitbook-plugin-plantuml",
   "description": "Sample plugin for GitBook",
   "main": "index.js",
   "version": "1.0.2",
