@@ -29,7 +29,7 @@ const createUML = async (content, uml, output) => {
                 let path = options.image_type;
                 let method = 'GET';
                 if (options.type === 'plantuml-server') {
-                    path = "/" + options.image_type + '/' + plantumlServerEscape(uml.umlBlock);
+                    path = "/" + options.path + options.image_type + '/' + plantumlServerEscape(uml.umlBlock);
                 } else {
                     method = 'POST';
                 }
@@ -62,6 +62,7 @@ module.exports = {
                 type: config.type || 'plantuml-service',
                 host: config.host || 'plantuml-service.herokuapp.com',
                 port: config.port || 80,
+                path: config.path || '',
                 protocol: config.protocol || 'https',
                 image_type: config.image_type || 'png',
                 blockRegex: config.blockRegex || '^```uml((.*[\r\n])+?)?```$'
