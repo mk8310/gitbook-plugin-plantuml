@@ -34,6 +34,8 @@ const createUML = async (content, uml, output) => {
                     method = 'POST';
                 }
 
+                console.log(host + "/" + path);
+
                 const req = client.request({
                     method: method,
                     host: options.host,
